@@ -419,10 +419,12 @@
 
       const recentList = document.getElementById("recentList");
 
-      const logsRef = ref(db, "vote_logs");
+      const logsRef = ref(db, "votes");
 
       onChildAdded(logsRef, (snapshot) => {
         const data = snapshot.val();
+
+        console.log(data)
 
         const date = new Date(data.time);
 
