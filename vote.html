@@ -431,7 +431,7 @@
           // ADD LOG
           // ================================
 
-          await push(ref(db, "vote_logs"), {
+          await push(ref(db, "votes"), {
             candidate: candidate,
             time: Date.now(),
           });
