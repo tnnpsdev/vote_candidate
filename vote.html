@@ -337,7 +337,7 @@
               id="countdownText"
               style="margin-top: 25px; color: #94a3b8; font-size: 18px"
             >
-              ปิดอัตโนมัติใน 5 วินาที
+              ปิดอัตโนมัติใน <front id="countNum"></front> วินาที
             </div>
           </div>
         </div>
@@ -453,12 +453,13 @@
           // countdown
           let countdown = 5;
 
-          const countdownText = document.getElementById("countdownText");
+          const countNum = document.getElementById("countNum");
+          countNum.textContent = countdown; 
 
           const timer = setInterval(() => {
             countdown--;
 
-            countdownText.innerText = `ปิดอัตโนมัติใน ${countdown} วินาที`;
+            countNum.textContent = countdown; 
 
             if (countdown <= 0) {
               clearInterval(timer);
