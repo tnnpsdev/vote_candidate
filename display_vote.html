@@ -158,11 +158,14 @@
       const voteRef = ref(db, "votes");
 
       onValue(voteRef, (snapshot) => {
-        const data = snapshot.val();
 
-        console.log(data);
+        const data = snapshot.val() || {};
 
-        const total = data ? Object.keys(data).length : 0;
+        const c1 = data.candidate1 || 0;
+
+        const c2 = data.candidate2 || 0;
+        
+        const total = c1 + c2;
 
         counter.innerText = total;
 
