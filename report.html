@@ -423,18 +423,13 @@
 
       onChildAdded(logsRef, (snapshot) => {
         const data = snapshot.val();
-
-        console.log(data)
-
-        const date = new Date(data.time);
-
-        const timeText = date.toLocaleString("th-TH");
-
-        const div = document.createElement("div");
-
-        div.className = "recent-item";
-
-        div.innerHTML = `
+        console.log(data);
+        if (data.time) {
+          const date = new Date(data.time);
+          const timeText = date.toLocaleString("th-TH");
+          const div = document.createElement("div");
+          div.className = "recent-item";
+          div.innerHTML = `
 
     <div class="check">
       ✓
@@ -453,7 +448,8 @@
 
   `;
 
-        recentList.prepend(div);
+          recentList.prepend(div);
+        }
       });
     </script>
   </body>
