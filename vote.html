@@ -249,7 +249,7 @@
     <div class="main-container">
       <div class="candidate-wrapper">
         <!-- Candidate 1 -->
-        <div class="candidate-card" onclick="selectCandidate(1)" id="card1">
+        <div class="candidate-card" onclick="selectCandidate(1, 'เด็กหญิงนิชากร พลับพลา')" id="card1">
           <div class="candidate-number">1</div>
 
           <img src="img/profile1.png" class="candidate-image" />
@@ -260,7 +260,7 @@
         </div>
 
         <!-- Candidate 2 -->
-        <div class="candidate-card" onclick="selectCandidate(2)" id="card2">
+        <div class="candidate-card" onclick="selectCandidate(2, 'เด็กหญิงใยแก้ว')" id="card2">
           <div class="candidate-number" style="background: #dc2626">2</div>
 
           <img src="img/profile2.png" class="candidate-image" />
@@ -393,7 +393,7 @@
 
       let selectedCandidate = null;
 
-      window.selectCandidate = function (number) {
+      window.selectCandidate = function (number,nameCandidate) {
         selectedCandidate = number;
 
         document.querySelectorAll(".candidate-card").forEach((card) => {
@@ -405,7 +405,7 @@
         document.getElementById("confirmBtn").disabled = false;
 
         document.getElementById("selectedText").innerText =
-          "เลือก Candidate " + number;
+          "เลือก เบอร์ " + number + " " + nameCandidate;
       };
 
       // =====================================
