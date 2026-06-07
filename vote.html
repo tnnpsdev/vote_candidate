@@ -419,6 +419,9 @@
         const candidate = selectedCandidate === 1 ? "candidate1" : "candidate2";
 
         try {
+
+          document.getElementById("confirmBtn").disabled = true;
+          
           // ================================
           // UPDATE SCORE
           // ================================
@@ -476,8 +479,6 @@
           document.querySelectorAll(".candidate-card").forEach((card) => {
             card.classList.remove("active");
           });
-
-          document.getElementById("confirmBtn").disabled = true;
 
           document.getElementById("selectedText").innerText =
             "ยังไม่ได้เลือกผู้สมัคร";
