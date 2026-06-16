@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ผลการเลือกตั้ง ประธานนักเรียน</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      * {
+        font-family: "Kanit", sans-serif;
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background: linear-gradient(135deg, #0a0f1e, #0f172a, #1a1f35);
+        min-height: 100vh;
+        color: white;
+        overflow: hidden;
+      }
+
+      /* ---- Background glows ---- */
+      .glow {
+        position: fixed;
+        border-radius: 50%;
+        filter: blur(130px);
+        opacity: 0.12;
+        pointer-events: none;
+        z-index: 0;
+      }
+      .glow-blue  { width: 600px; height: 600px; background: #3b82f6; top: -200px; left: -200px; }
+      .glow-red   { width: 600px; height: 600px; background: #ef4444; top: -200px; right: -200px; }
+      .glow-gold  { width: 400px; height: 400px; background: #f59e0b; bottom: -150px; left: 50%; transform: translateX(-50%); }
+
+      /* ---- Layout ---- */
+      .page {
+        position: relative;
+        z-index: 1;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        padding: 28px 40px 20px;
+        gap: 20px;
+      }
+
+      /* ---- Header ---- */
+      .header {
+        text-align: center;
+        flex-shrink: 0;
+      }
+
+      .header-title {
+        font-size: 52px;
+        font-weight: 900;
+        letter-spacing: 3px;
+        background: linear-gradient(90deg, #60a5fa, #ffffff, #f87171);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        line-height: 1.1;
+      }
+
+      .header-sub {
+        font-size: 20px;
+        color: #94a3b8;
+        margin-top: 4px;
+      }
+
+      .live-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        background: rgba(239, 68, 68, 0.18);
+        border: 1px solid rgba(239, 68, 68, 0.4);
+        border-radius: 999px;
+        padding: 4px 16px;
+        font-size: 15px;
+        font-weight: 600;
+        color: #f87171;
+        margin-top: 8px;
+      }
+
+      .live-dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: #ef4444;
+        animation: blink 1.2s ease-in-out infinite;
+      }
+
+      @keyframes blink {
+        0%, 100% { opacity: 1; }
+        50%       { opacity: 0.2; }
+      }
+
+      /* ---- Candidate cards ---- */
+      .candidates-row {
+        flex: 1;
+        display: grid;
+        grid-template-columns: 1fr 220px 1fr;
+        gap: 24px;
+        min-height: 0;
+      }
+
+      .candidate-card {
+        background: rgba(255, 255, 255, 0.06);
+        border: 2px solid rgba(255, 255, 255, 0.08);
+        border-radius: 36px;
+        padding: 28px 24px 24px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        backdrop-filter: blur(20px);
+        transition: border-color 0.5s, box-shadow 0.5s;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .candidate-card.leading {
+        border-color: #f59e0b;
+        box-shadow: 0 0 40px rgba(245, 158, 11, 0.25);
+      }
+
+      .candidate-card.leading::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(ellipse at top, rgba(245, 158, 11, 0.08) 0%, transparent 70%);
+        pointer-events: none;
+      }
+
+      /* Number badge */
+      .num-badge {
+        position: absolute;
+        top: 22px;
+        width: 64px;
+        height: 64px;
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        font-weight: 800;
+      }
+
+      .card-left .num-badge  { left: 22px;  background: #1d4ed8; }
+      .card-right .num-badge { right: 22px; background: #b91c1c; }
+
+      /* Crown */
+      .crown {
+        font-size: 40px;
+        line-height: 1;
+        opacity: 0;
+        transform: translateY(-6px) scale(0.8);
+        transition: opacity 0.4s, transform 0.4s;
+        margin-bottom: 4px;
+      }
+
+      .candidate-card.leading .crown {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+
+      .candidate-photo {
+        width: 170px;
+        height: 170px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 7px solid rgba(255, 255, 255, 0.12);
+        margin-bottom: 14px;
+        transition: border-color 0.5s;
+        flex-shrink: 0;
+      }
+
+      .candidate-card.leading .candidate-photo {
+        border-color: rgba(245, 158, 11, 0.6);
+      }
+
+      .candidate-name {
+        font-size: 26px;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 4px;
+        line-height: 1.2;
+      }
+
+      .candidate-slogan {
+        font-size: 15px;
+        color: #94a3b8;
+        text-align: center;
+        margin-bottom: 14px;
+      }
+
+      .vote-number {
+        font-size: 100px;
+        font-weight: 900;
+        line-height: 1;
+        transition: transform 0.2s;
+      }
+
+      .card-left  .vote-number { color: #60a5fa; }
+      .card-right .vote-number { color: #f87171; }
+
+      .candidate-card.leading .vote-number { color: #fbbf24; }
+
+      .vote-label {
+        font-size: 18px;
+        color: #64748b;
+        margin-top: 2px;
+      }
+
+      .pct-pill {
+        margin-top: 10px;
+        padding: 6px 22px;
+        border-radius: 999px;
+        font-size: 22px;
+        font-weight: 700;
+        background: rgba(255, 255, 255, 0.08);
+        transition: background 0.4s;
+      }
+
+      .candidate-card.leading .pct-pill {
+        background: rgba(245, 158, 11, 0.2);
+        color: #fbbf24;
+      }
+
+      /* ---- Center panel ---- */
+      .center-panel {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+      }
+
+      .vs-text {
+        font-size: 44px;
+        font-weight: 900;
+        color: rgba(255, 255, 255, 0.2);
+        letter-spacing: 4px;
+      }
+
+      .total-box {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 24px;
+        padding: 18px 24px;
+        text-align: center;
+        backdrop-filter: blur(16px);
+        width: 100%;
+      }
+
+      .total-label {
+        font-size: 14px;
+        color: #64748b;
+        margin-bottom: 4px;
+      }
+
+      .total-number {
+        font-size: 54px;
+        font-weight: 800;
+        color: #facc15;
+        line-height: 1;
+      }
+
+      .total-unit {
+        font-size: 16px;
+        color: #94a3b8;
+        margin-top: 2px;
+      }
+
+      /* ---- Comparison bar ---- */
+      .bar-section {
+        flex-shrink: 0;
+      }
+
+      .bar-labels {
+        display: flex;
+        justify-content: space-between;
+        font-size: 16px;
+        color: #94a3b8;
+        margin-bottom: 8px;
+        padding: 0 2px;
+      }
+
+      .bar-label-left  span { color: #60a5fa; font-weight: 700; }
+      .bar-label-right span { color: #f87171; font-weight: 700; }
+
+      .bar-track {
+        height: 22px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.06);
+        overflow: hidden;
+        display: flex;
+      }
+
+      .bar-fill-left {
+        height: 100%;
+        background: linear-gradient(90deg, #1d4ed8, #3b82f6, #60a5fa);
+        border-radius: 999px 0 0 999px;
+        transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .bar-fill-right {
+        height: 100%;
+        background: linear-gradient(90deg, #f87171, #ef4444, #b91c1c);
+        border-radius: 0 999px 999px 0;
+        transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        margin-left: auto;
+      }
+
+      /* ---- Pulse animation on score change ---- */
+      @keyframes scorePop {
+        0%   { transform: scale(1); }
+        40%  { transform: scale(1.07); }
+        100% { transform: scale(1); }
+      }
+
+      .pop { animation: scorePop 0.35s ease-out; }
+    </style>
+  </head>
+  <body>
+
+    <div class="glow glow-blue"></div>
+    <div class="glow glow-red"></div>
+    <div class="glow glow-gold"></div>
+
+    <div class="page">
+
+      <!-- HEADER -->
+      <div class="header">
+        <div class="header-title">🗳️ ผลการเลือกตั้ง ประธานนักเรียน</div>
+        <div class="header-sub">โรงเรียนทรัพย์ประเทืองคลอง 6</div>
+        <div class="live-badge">
+          <div class="live-dot"></div> LIVE REALTIME
+        </div>
+      </div>
+
+      <!-- CANDIDATES ROW -->
+      <div class="candidates-row">
+
+        <!-- CANDIDATE 1 -->
+        <div class="candidate-card card-left" id="card1">
+          <div class="num-badge">1</div>
+          <div class="crown">👑</div>
+          <img src="img/profile1.png" class="candidate-photo" onerror="this.src='https://ui-avatars.com/api/?name=1&background=1d4ed8&color=fff&size=200'" />
+          <div class="candidate-name">เด็กหญิงนิชากร พลับพลา</div>
+          <div class="candidate-slogan">พรรคเพื่อน้อง พี่พร้อมพัฒนา</div>
+          <div class="vote-number" id="score1">0</div>
+          <div class="vote-label">คะแนน</div>
+          <div class="pct-pill" id="pct1">0.0%</div>
+        </div>
+
+        <!-- CENTER -->
+        <div class="center-panel">
+          <div class="vs-text">VS</div>
+          <div class="total-box">
+            <div class="total-label">ผู้มาใช้สิทธิ์ทั้งหมด</div>
+            <div class="total-number" id="totalVotes">0</div>
+            <div class="total-unit">คน</div>
+          </div>
+        </div>
+
+        <!-- CANDIDATE 2 -->
+        <div class="candidate-card card-right" id="card2">
+          <div class="num-badge">2</div>
+          <div class="crown">👑</div>
+          <img src="img/profile2.png" class="candidate-photo" onerror="this.src='https://ui-avatars.com/api/?name=2&background=b91c1c&color=fff&size=200'" />
+          <div class="candidate-name">เด็กหญิงใยแก้ว</div>
+          <div class="candidate-slogan">พรรคที่จะล้อม พร้อมที่จะรัก</div>
+          <div class="vote-number" id="score2">0</div>
+          <div class="vote-label">คะแนน</div>
+          <div class="pct-pill" id="pct2">0.0%</div>
+        </div>
+
+      </div>
+
+      <!-- COMPARISON BAR -->
+      <div class="bar-section">
+        <div class="bar-labels">
+          <div class="bar-label-left">เบอร์ 1 — <span id="barPct1">0%</span></div>
+          <div class="bar-label-right"><span id="barPct2">0%</span> — เบอร์ 2</div>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill-left"  id="barLeft"  style="width:50%"></div>
+          <div class="bar-fill-right" id="barRight" style="width:50%"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+      import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyBNzWS5gzCkjx8FOcFrp_019c4jJizKk4M",
+        authDomain: "vote-tpk.firebaseapp.com",
+        databaseURL: "https://vote-tpk-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "vote-tpk",
+        storageBucket: "vote-tpk.appspot.com",
+        messagingSenderId: "1032155013508",
+        appId: "1:1032155013508:web:a7c90830e92366afba7dd1",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db  = getDatabase(app);
+
+      const elScore1  = document.getElementById("score1");
+      const elScore2  = document.getElementById("score2");
+      const elTotal   = document.getElementById("totalVotes");
+      const elPct1    = document.getElementById("pct1");
+      const elPct2    = document.getElementById("pct2");
+      const elBarPct1 = document.getElementById("barPct1");
+      const elBarPct2 = document.getElementById("barPct2");
+      const elBarL    = document.getElementById("barLeft");
+      const elBarR    = document.getElementById("barRight");
+      const elCard1   = document.getElementById("card1");
+      const elCard2   = document.getElementById("card2");
+
+      function animatePop(el) {
+        el.classList.remove("pop");
+        void el.offsetWidth;
+        el.classList.add("pop");
+      }
+
+      onValue(ref(db, "votes"), (snapshot) => {
+        const data = snapshot.val() || {};
+        const c1   = data.candidate1 || 0;
+        const c2   = data.candidate2 || 0;
+        const total = c1 + c2;
+
+        // scores
+        if (elScore1.textContent != String(c1)) {
+          elScore1.textContent = c1;
+          animatePop(elScore1);
+        }
+        if (elScore2.textContent != String(c2)) {
+          elScore2.textContent = c2;
+          animatePop(elScore2);
+        }
+        elTotal.textContent = total;
+
+        // percentages
+        const p1 = total > 0 ? ((c1 / total) * 100).toFixed(1) : "0.0";
+        const p2 = total > 0 ? ((c2 / total) * 100).toFixed(1) : "0.0";
+        elPct1.textContent    = p1 + "%";
+        elPct2.textContent    = p2 + "%";
+        elBarPct1.textContent = p1 + "%";
+        elBarPct2.textContent = p2 + "%";
+
+        // progress bar
+        const w1 = total > 0 ? (c1 / total) * 100 : 50;
+        const w2 = total > 0 ? (c2 / total) * 100 : 50;
+        elBarL.style.width = w1 + "%";
+        elBarR.style.width = w2 + "%";
+
+        // leading highlight
+        elCard1.classList.toggle("leading", c1 > c2);
+        elCard2.classList.toggle("leading", c2 > c1);
+      });
+    </script>
+  </body>
+</html>
